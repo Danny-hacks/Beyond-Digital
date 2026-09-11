@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Beyond Digital</title>
+<meta name="description" content="Get in touch with Beyond Digital, based in Moka, Mauritius. Call, WhatsApp, or send us a message about your project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  header.site.is-scrolled{box-shadow:0 8px 24px -12px rgba(10,42,61,.4);}
+</style>
+</head>
+<body>
+<div class="page-loader" aria-hidden="true">
+  <img src="assets/images/chevron-mark.png" alt="">
+</div>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="header-row">
+    <a class="brand" href="index.html" aria-label="Beyond Digital, home">
+      <img class="brand-mark" src="assets/images/chevron-mark.png" alt="" width="30" height="30">
+      <span class="brand-word"><b>Beyond</b><span>Digital</span></span>
+    </a>
+    <nav class="primary" id="primary-nav" data-open="false">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#portfolio">Portfolio</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <a class="phone-link" href="tel:+23054729515">+230 5472 9515</a>
+      <a class="btn btn-primary" href="#contact-form">Get a Free Quote</a>
+      <button class="hamburger" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle menu">
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M0 1H18" stroke="currentColor" stroke-width="2"/><path d="M0 7H18" stroke="currentColor" stroke-width="2"/><path d="M0 13H18" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="section-dark">
+  <div class="hero wrap" style="grid-template-columns:1fr;padding-block:min(6vw,60px) min(5vw,50px);">
+    <div>
+      <p class="eyebrow" data-hero-eyebrow>Contact</p>
+      <h1 data-hero-title style="max-width:15ch;">Let's talk about your project.</h1>
+      <!-- <p class="lede" data-hero-lede style="margin-top:18px;">Call, WhatsApp, or send a message — we typically reply within one business day.</p> -->
+    </div>
+  </div>
+  </section>
+
+  <section class="pad">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="contact-anchor" data-reveal>
+          <img class="mark-bg" src="assets/images/chevron-mark.png" alt="" aria-hidden="true">
+          <p class="h-poster place">Moka,<br>Mauritius.</p>
+          <p class="lede" style="margin-top:18px;">Call, WhatsApp, or send a message. We typically reply <br> within one business day.</p> <br><br>
+          <address>
+            <div class="nap-row">
+              <svg class="nap-icon" viewBox="0 0 24 24" fill="none" role="img" aria-label="Address"><path d="M12 21C12 21 19 14.5 19 9.5C19 5.36 15.64 2 11.5 2C7.36 2 4 5.36 4 9.5C4 14.5 12 21 12 21Z" stroke="currentColor" stroke-width="1.6"/><circle cx="11.5" cy="9.5" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
+              <div><strong>Beyond Digital</strong><br>Les Allées, D'Helvetia<br>Moka, Mauritius</div>
+            </div>
+            <div class="nap-row">
+              <svg class="nap-icon" viewBox="0 0 24 24" fill="none" role="img" aria-label="Phone"><path d="M4 5C4 14 10 20 19 20L21 16L16 14L14 17C11 15.5 8.5 13 7 10L10 8L8 3L4 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              <div><a href="tel:+23054729515">+230 5472 9515</a><br><span class="muted">Call or WhatsApp</span></div>
+            </div>
+            <div class="nap-row">
+              <svg class="nap-icon" viewBox="0 0 24 24" fill="none" role="img" aria-label="Email"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 6L12 13L20 6" stroke="currentColor" stroke-width="1.6"/></svg>
+              <div><a href="mailto:rajeev@beyonddigital.mu">rajeev@beyonddigital.mu</a></div>
+            </div>
+          </address>
+        </div>
+
+        <form class="contact" id="contact-form" onsubmit="return false;" data-reveal>
+          <div class="field"><label for="cf-name">Name</label><input id="cf-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="cf-email">Email</label><input id="cf-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="cf-phone">Phone</label><input id="cf-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="cf-message">Message</label><textarea id="cf-message" name="message" required></textarea></div>
+          <button class="btn btn-primary" type="submit" style="width:100%;">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="footer-grid">
+    <div>
+      <div class="brand" style="margin-bottom:14px;">
+        <img class="brand-mark" src="assets/images/chevron-mark.png" alt="" width="30" height="30">
+        <span class="brand-word"><b>Beyond</b><span>Digital</span></span>
+      </div>
+      <p style="max-width:32ch;font-size:.92rem;">Web design, digital marketing and AI automation for businesses growing beyond Mauritius.</p>
+      <div class="social-links">
+        <a href="https://www.facebook.com/beyonddigitalmru/" target="_blank" rel="noopener" aria-label="Beyond Digital on Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg>
+        </a>
+        <a href="https://mu.linkedin.com/company/beyond-digital-ltd" target="_blank" rel="noopener" aria-label="Beyond Digital on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.02 2 2 0 0 1 4 .02ZM3.2 8.75h3.5V21H3.2V8.75Zm6.16 0h3.35v1.68h.05c.47-.88 1.6-1.8 3.3-1.8 3.53 0 4.18 2.32 4.18 5.34V21h-3.5v-5.4c0-1.29-.02-2.94-1.79-2.94-1.8 0-2.07 1.4-2.07 2.85V21H9.36V8.75Z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/beyonddigitalmru/" target="_blank" rel="noopener" aria-label="Beyond Digital on Instagram">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <h4>Site</h4>
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#portfolio">Portfolio</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <a class="contact-row" href="tel:+23054729515">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span>+230 5472 9515</span>
+      </a>
+      <a class="contact-row" href="mailto:rajeev@beyonddigital.mu">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>rajeev@beyonddigital.mu</span>
+      </a>
+      <div class="contact-row" style="padding-block:5px;font-size:.94rem;">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.3" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>Les Allées, D'Helvetia, Moka, Mauritius</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Beyond Digital. All rights reserved.</span>
+    <a href="privacy-policy.html">Privacy Policy</a>
+  </div>
+</footer>
+
+<!-- WhatsApp widget -->
+<a class="whatsapp-widget" href="https://wa.me/23054729515" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32" fill="#fff" aria-hidden="true"><path d="M16.02 3C9.4 3 4 8.37 4 15c0 2.23.62 4.32 1.7 6.11L4 29l8.09-1.66A11.94 11.94 0 0 0 16.02 27C22.65 27 28 21.63 28 15S22.65 3 16.02 3Zm6.94 16.98c-.3.83-1.72 1.6-2.37 1.68-.62.08-1.28.36-4.3-.9-3.62-1.5-5.95-5.2-6.13-5.44-.18-.24-1.46-1.95-1.46-3.72 0-1.77.93-2.63 1.26-2.99.33-.36.72-.45.96-.45.24 0 .48 0 .68.01.22.01.51-.08.8.61.3.72 1.02 2.49 1.11 2.67.09.18.15.39.03.63-.12.24-.18.39-.36.6-.18.21-.38.47-.54.63-.18.18-.37.37-.16.73.21.36.93 1.53 1.99 2.48 1.37 1.22 2.52 1.6 2.88 1.78.36.18.57.15.78-.09.21-.24.9-1.05 1.14-1.41.24-.36.48-.3.81-.18.33.12 2.1.99 2.46 1.17.36.18.6.27.69.42.09.15.09.87-.21 1.7Z"/></svg>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
