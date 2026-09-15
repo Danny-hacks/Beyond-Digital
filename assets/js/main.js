@@ -130,6 +130,185 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
   }
 
+  function initLogoMarquees() {
+    var marquees = document.querySelectorAll('.logo-marquee');
+    marquees.forEach(function (wrapper) {
+      var track = wrapper.querySelector('.logo-track');
+      if (!track) return;
+
+      // Clone the tile set once, programmatically — guarantees the two
+      // halves are always pixel-identical, so adding/removing a logo in
+      // the source markup can never desync the loop point.
+      var originalTiles = Array.prototype.slice.call(track.children);
+      originalTiles.forEach(function (tile) {
+        var clone = tile.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+      });
+
+      var reverse = wrapper.classList.contains('reverse');
+      var speed = 28; // px per second
+      var pos = 0;
+      var half = 0;
+      var ready = false;
+      var hovering = false;
+      var dragging = false;
+      var startX = 0, startPos = 0, moved = false;
+      var lastTime = null;
+
+      function measure() { half = track.scrollWidth / 2; }
+
+      function waitForImages(cb) {
+        var imgs = track.querySelectorAll('img');
+        var remaining = imgs.length;
+        if (remaining === 0) { cb(); return; }
+        function done() { remaining--; if (remaining <= 0) cb(); }
+        imgs.forEach(function (img) {
+          if (img.complete) done();
+          else {
+            img.addEventListener('load', done, { once: true });
+            img.addEventListener('error', done, { once: true });
+          }
+        });
+      }
+      waitForImages(function () { measure(); ready = true; });
+      window.addEventListener('resize', measure);
+
+      function wrap() {
+        if (half > 0) pos = ((pos % half) + half) % half;
+      }
+      function apply() { track.style.transform = 'translateX(' + (-pos) + 'px)'; }
+
+      function frame(t) {
+        if (lastTime === null) lastTime = t;
+        var dt = Math.min((t - lastTime) / 1000, 0.05);
+        lastTime = t;
+        if (ready && !reduceMotion && !hovering && !dragging) {
+          pos += (reverse ? -1 : 1) * speed * dt;
+          wrap();
+          apply();
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      wrapper.addEventListener('mouseenter', function () { hovering = true; });
+      wrapper.addEventListener('mouseleave', function () {
+        hovering = false;
+        if (dragging) { dragging = false; wrapper.classList.remove('dragging'); }
+      });
+
+      function down(x) {
+        dragging = true; moved = false;
+        wrapper.classList.add('dragging');
+        startX = x; startPos = pos;
+      }
+      function drag(x) {
+        if (!dragging) return;
+        var dx = x - startX;
+        if (Math.abs(dx) > 3) moved = true;
+        pos = startPos - dx;
+        wrap(); apply();
+      }
+      function releaseDrag() {
+        dragging = false;
+        wrapper.classList.remove('dragging');
+      }
+
+      wrapper.addEventListener('mousedown', function (e) { down(e.pageX); });
+      window.addEventListener('mousemove', function (e) { if (dragging) { e.preventDefault(); drag(e.pageX); } });
+      window.addEventListener('mouseup', releaseDrag);
+      wrapper.addEventListener('click', function (e) { if (moved) e.preventDefault(); }, true);
+
+      wrapper.addEventListener('touchstart', function (e) { hovering = true; down(e.touches[0].pageX); }, { passive: true });
+      wrapper.addEventListener('touchmove', function (e) { drag(e.touches[0].pageX); }, { passive: true });
+      wrapper.addEventListener('touchend', function () { releaseDrag(); hovering = false; });
+    });
+  }
+
+  function initCardTilt() {
+    if (reduceMotion) return;
+    var cards = document.querySelectorAll('.browser-card, .bare-tile, .stats-band .numbers>div');
+    cards.forEach(function (card) {
+      card.style.transformPerspective = '800px';
+      function onMove(e) {
+        var b = card.getBoundingClientRect();
+        var x = (e.clientX - b.left) / b.width - 0.5;
+        var y = (e.clientY - b.top) / b.height - 0.5;
+        gsap.to(card, { rotateX: y * -7, rotateY: x * 7, y: -8, duration: 0.4, ease: 'power2.out' });
+      }
+      function onLeave() {
+        gsap.to(card, { rotateX: 0, rotateY: 0, y: 0, duration: 0.6, ease: 'power3.out' });
+      }
+      card.addEventListener('mousemove', onMove);
+      card.addEventListener('mouseleave', onLeave);
+    });
+  }
+
+  function initMagneticButtons() {
+    if (reduceMotion) return;
+    var btns = document.querySelectorAll('.btn-lg');
+    btns.forEach(function (btn) {
+      function onMove(e) {
+        var b = btn.getBoundingClientRect();
+        var x = (e.clientX - b.left - b.width / 2) * 0.25;
+        var y = (e.clientY - b.top - b.height / 2) * 0.35;
+        gsap.to(btn, { x: x, y: y, duration: 0.3, ease: 'power2.out' });
+      }
+      function onLeave() {
+        gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
+      }
+      btn.addEventListener('mousemove', onMove);
+      btn.addEventListener('mouseleave', onLeave);
+    });
+  }
+
+  function initCustomCursor() {
+    if (reduceMotion || window.matchMedia('(pointer: coarse)').matches) return;
+
+    var dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    var ring = document.createElement('div');
+    ring.className = 'cursor-ring';
+    document.body.appendChild(dot);
+    document.body.appendChild(ring);
+    document.body.classList.add('custom-cursor-active');
+
+    var mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
+    var started = false;
+
+    document.addEventListener('mousemove', function (e) {
+      mouseX = e.clientX; mouseY = e.clientY;
+      dot.style.transform = 'translate(' + mouseX + 'px,' + mouseY + 'px)';
+      if (!started) { ringX = mouseX; ringY = mouseY; started = true; }
+    });
+
+    function loop() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.transform = 'translate(' + ringX + 'px,' + ringY + 'px)';
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    document.addEventListener('mousedown', function () { ring.classList.add('cursor-active'); });
+    document.addEventListener('mouseup', function () { ring.classList.remove('cursor-active'); });
+    document.addEventListener('mouseleave', function () { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+    document.addEventListener('mouseenter', function () { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+
+    var hoverSelector = 'a, button, input, textarea, .browser-card, .bare-tile, .team-card, .logo-tile, .process-card, .stats-band .numbers>div';
+    document.addEventListener('mouseover', function (e) {
+      if (e.target.closest(hoverSelector)) { dot.classList.add('cursor-hover'); ring.classList.add('cursor-hover'); }
+    });
+    document.addEventListener('mouseout', function (e) {
+      var toHoverable = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(hoverSelector);
+      if (e.target.closest(hoverSelector) && !toHoverable) {
+        dot.classList.remove('cursor-hover');
+        ring.classList.remove('cursor-hover');
+      }
+    });
+  }
+
   function initViewMoreProjects() {
     var btn = document.getElementById('view-more-projects');
     var panel = document.getElementById('more-projects');
@@ -145,6 +324,10 @@
   window.addEventListener('DOMContentLoaded', function () {
     initQuoteModal();
     initViewMoreProjects();
+    initLogoMarquees();
+    initCardTilt();
+    initMagneticButtons();
+    initCustomCursor();
     if (loader) {
       gsap.to(loader, {
         opacity: 0, duration: 0.5, delay: 0.35, ease: 'power1.out',
