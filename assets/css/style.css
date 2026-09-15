@@ -42,8 +42,7 @@
 .cursor-ring.cursor-active{width:26px; height:26px; margin:-13px 0 0 -13px;}
 body.custom-cursor-active, body.custom-cursor-active *{cursor:none !important;}
 body.custom-cursor-active input, body.custom-cursor-active textarea, body.custom-cursor-active select{cursor:auto !important;}
-@media (max-width:900px){ .cursor-dot, .cursor-ring{display:none !important;} }
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth; overflow-x:hidden;}
 [id]{scroll-margin-top:88px;}
 body{
   margin:0;
@@ -141,13 +140,18 @@ nav.primary a[aria-current="page"]::after{display:none;}
 .hamburger{display:none;background:none;border:1px solid rgba(255,255,255,.3);color:var(--on-ink);border-radius:var(--radius-s);width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;flex:none;}
 .mobile-quote-btn{display:none;}
 @media (max-width:860px){
-  nav.primary{position:fixed;inset:64px 0 0 0;background:var(--ink);flex-direction:column;align-items:flex-start;padding:24px;gap:2px;transform:translateY(-8px);opacity:0;pointer-events:none;transition:opacity .15s ease, transform .15s ease;overflow-y:auto;}
+  header.site{position:sticky;}
+  .header-row{flex-wrap:wrap; row-gap:12px;}
+  nav.primary{position:absolute; top:100%; left:0; right:0; height:100vh;background:var(--ink);flex-direction:column;align-items:flex-start;padding:24px;gap:2px;transform:translateY(-8px);opacity:0;pointer-events:none;transition:opacity .15s ease, transform .15s ease;overflow-y:auto;}
   nav.primary a{width:100%;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.08);font-size:1.05rem;}
   nav.primary[data-open="true"]{opacity:1;pointer-events:auto;transform:translateY(0);}
   .hamburger{display:inline-flex;}
   .header-actions .btn-ghost-on-ink{display:none;}
   .header-actions > a.btn-primary{display:none;}
   nav.primary a.mobile-quote-btn{display:flex; width:100%; margin-top:14px; padding:14px 26px; border-bottom:none;}
+}
+@media (max-width:600px){
+  .brand-logo{height:52px;}
 }
 
 /* ---------- Layout ---------- */
@@ -192,6 +196,7 @@ h3{font-size:1.2rem;font-weight:700;}
   background:radial-gradient(closest-side, rgba(255,30,121,.35), rgba(28,150,216,.25) 60%, transparent 75%);
   filter:blur(10px);
 }
+@media (max-width:900px){ .hero-art .glow{inset:-4%;} }
 .hero-art .frame{border-radius:var(--radius-l);overflow:hidden;position:relative;z-index:1;aspect-ratio:4/5;box-shadow:0 30px 60px -24px rgba(7,27,41,.45);animation:hero-float 6s ease-in-out infinite;}
 @keyframes hero-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
 @media (prefers-reduced-motion: reduce){ .hero-art .frame{animation:none;} }

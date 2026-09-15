@@ -231,17 +231,20 @@
     var cards = document.querySelectorAll('.browser-card, .bare-tile, .stats-band .numbers>div');
     cards.forEach(function (card) {
       card.style.transformPerspective = '800px';
-      function onMove(e) {
+      function apply(clientX, clientY) {
         var b = card.getBoundingClientRect();
-        var x = (e.clientX - b.left) / b.width - 0.5;
-        var y = (e.clientY - b.top) / b.height - 0.5;
+        var x = (clientX - b.left) / b.width - 0.5;
+        var y = (clientY - b.top) / b.height - 0.5;
         gsap.to(card, { rotateX: y * -7, rotateY: x * 7, y: -8, duration: 0.4, ease: 'power2.out' });
       }
-      function onLeave() {
+      function reset() {
         gsap.to(card, { rotateX: 0, rotateY: 0, y: 0, duration: 0.6, ease: 'power3.out' });
       }
-      card.addEventListener('mousemove', onMove);
-      card.addEventListener('mouseleave', onLeave);
+      card.addEventListener('mousemove', function (e) { apply(e.clientX, e.clientY); });
+      card.addEventListener('mouseleave', reset);
+      card.addEventListener('touchstart', function (e) { apply(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+      card.addEventListener('touchmove', function (e) { apply(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+      card.addEventListener('touchend', reset);
     });
   }
 
@@ -249,22 +252,27 @@
     if (reduceMotion) return;
     var btns = document.querySelectorAll('.btn-lg');
     btns.forEach(function (btn) {
-      function onMove(e) {
+      function apply(clientX, clientY) {
         var b = btn.getBoundingClientRect();
-        var x = (e.clientX - b.left - b.width / 2) * 0.25;
-        var y = (e.clientY - b.top - b.height / 2) * 0.35;
+        var x = (clientX - b.left - b.width / 2) * 0.25;
+        var y = (clientY - b.top - b.height / 2) * 0.35;
         gsap.to(btn, { x: x, y: y, duration: 0.3, ease: 'power2.out' });
       }
-      function onLeave() {
+      function reset() {
         gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
       }
-      btn.addEventListener('mousemove', onMove);
-      btn.addEventListener('mouseleave', onLeave);
+      btn.addEventListener('mousemove', function (e) { apply(e.clientX, e.clientY); });
+      btn.addEventListener('mouseleave', reset);
+      btn.addEventListener('touchstart', function (e) { apply(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+      btn.addEventListener('touchmove', function (e) { apply(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+      btn.addEventListener('touchend', reset);
     });
   }
 
   function initCustomCursor() {
-    if (reduceMotion || window.matchMedia('(pointer: coarse)').matches) return;
+    if (reduceMotion) return;
+
+    var isTouch = window.matchMedia('(pointer: coarse)').matches;
 
     var dot = document.createElement('div');
     dot.className = 'cursor-dot';
@@ -273,15 +281,16 @@
     document.body.appendChild(dot);
     document.body.appendChild(ring);
     document.body.classList.add('custom-cursor-active');
+    if (isTouch) { dot.style.opacity = '0'; ring.style.opacity = '0'; }
 
     var mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
     var started = false;
 
-    document.addEventListener('mousemove', function (e) {
-      mouseX = e.clientX; mouseY = e.clientY;
+    function moveTo(x, y) {
+      mouseX = x; mouseY = y;
       dot.style.transform = 'translate(' + mouseX + 'px,' + mouseY + 'px)';
       if (!started) { ringX = mouseX; ringY = mouseY; started = true; }
-    });
+    }
 
     function loop() {
       ringX += (mouseX - ringX) * 0.12;
@@ -291,22 +300,49 @@
     }
     requestAnimationFrame(loop);
 
-    document.addEventListener('mousedown', function () { ring.classList.add('cursor-active'); });
-    document.addEventListener('mouseup', function () { ring.classList.remove('cursor-active'); });
-    document.addEventListener('mouseleave', function () { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-    document.addEventListener('mouseenter', function () { dot.style.opacity = '1'; ring.style.opacity = '1'; });
-
     var hoverSelector = 'a, button, input, textarea, .browser-card, .bare-tile, .team-card, .logo-tile, .process-card, .stats-band .numbers>div';
-    document.addEventListener('mouseover', function (e) {
-      if (e.target.closest(hoverSelector)) { dot.classList.add('cursor-hover'); ring.classList.add('cursor-hover'); }
-    });
-    document.addEventListener('mouseout', function (e) {
-      var toHoverable = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(hoverSelector);
-      if (e.target.closest(hoverSelector) && !toHoverable) {
-        dot.classList.remove('cursor-hover');
-        ring.classList.remove('cursor-hover');
-      }
-    });
+
+    if (!isTouch) {
+      document.addEventListener('mousemove', function (e) { moveTo(e.clientX, e.clientY); });
+      document.addEventListener('mousedown', function () { ring.classList.add('cursor-active'); });
+      document.addEventListener('mouseup', function () { ring.classList.remove('cursor-active'); });
+      document.addEventListener('mouseleave', function () { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+      document.addEventListener('mouseenter', function () { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+      document.addEventListener('mouseover', function (e) {
+        if (e.target.closest(hoverSelector)) { dot.classList.add('cursor-hover'); ring.classList.add('cursor-hover'); }
+      });
+      document.addEventListener('mouseout', function (e) {
+        var toHoverable = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(hoverSelector);
+        if (e.target.closest(hoverSelector) && !toHoverable) {
+          dot.classList.remove('cursor-hover');
+          ring.classList.remove('cursor-hover');
+        }
+      });
+    } else {
+      // Touch: show a brief tap glow at the touch point, then fade it out.
+      var fadeTimer = null;
+      document.addEventListener('touchstart', function (e) {
+        if (!e.touches.length) return;
+        clearTimeout(fadeTimer);
+        var t = e.touches[0];
+        moveTo(t.clientX, t.clientY);
+        ringX = t.clientX; ringY = t.clientY;
+        dot.style.opacity = '1'; ring.style.opacity = '1';
+        ring.classList.add('cursor-active');
+        if (e.target.closest(hoverSelector)) ring.classList.add('cursor-hover');
+      }, { passive: true });
+      document.addEventListener('touchmove', function (e) {
+        if (!e.touches.length) return;
+        var t = e.touches[0];
+        moveTo(t.clientX, t.clientY);
+      }, { passive: true });
+      document.addEventListener('touchend', function () {
+        ring.classList.remove('cursor-active', 'cursor-hover');
+        fadeTimer = setTimeout(function () {
+          dot.style.opacity = '0'; ring.style.opacity = '0';
+        }, 350);
+      });
+    }
   }
 
   function initViewMoreProjects() {
