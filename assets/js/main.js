@@ -131,6 +131,24 @@
   }
 
   function initLogoMarquees() {
+    // On mobile, spread the logos across 3 shorter rows instead of 2 —
+    // bigger tiles need the extra row to avoid a cramped, tiny-logo strip.
+    var stack = document.querySelector('.logo-marquee-stack');
+    if (stack && window.matchMedia('(max-width:600px)').matches) {
+      var rowTracks = Array.prototype.slice.call(stack.querySelectorAll('.logo-marquee:not(.mobile-third) .logo-track'))
+        .concat(stack.querySelectorAll('.logo-marquee.mobile-third .logo-track')[0] || []);
+      if (rowTracks.length === 3) {
+        var allTiles = rowTracks[0].children.length || rowTracks[1].children.length
+          ? Array.prototype.slice.call(rowTracks[0].children).concat(Array.prototype.slice.call(rowTracks[1].children))
+          : [];
+        if (allTiles.length) {
+          rowTracks[0].innerHTML = '';
+          rowTracks[1].innerHTML = '';
+          allTiles.forEach(function (tile, i) { rowTracks[i % 3].appendChild(tile); });
+        }
+      }
+    }
+
     var marquees = document.querySelectorAll('.logo-marquee');
     marquees.forEach(function (wrapper) {
       var track = wrapper.querySelector('.logo-track');
